@@ -3,33 +3,56 @@ import React from 'react';
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg'
 
 import './styles.css'
+import api from '../../services/api';
 
-function TeacherItem() {
+export interface Teacher {
+    id: number;
+    avatar: string;
+    bio: string;
+    cost: number;
+    name: string;
+    subject: string;
+    whatsapp: string;
+}
+
+interface TeacherItemProps {
+  teacher: Teacher;
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+  function createNewConnection() {
+    api.post('connections', {
+      user_id: teacher.id,
+    })
+  }
+
   return(
     <article className="teacher-item">
       <header>
-        <img src="https://avatars0.githubusercontent.com/u/26398277?s=460&u=b04bff0324c1a653b55c2cac8f1cfbbdaf1a282a&v=4" alt="Cleiton Garcia" ></img>
+        <img src={teacher.avatar} alt={teacher.name} ></img>
         <div>
-          <strong>Cleiton Garcia</strong>
-          <span>Matemática</span>
+          <strong>{teacher.name}</strong>
+          <span>{teacher.subject}</span>
         </div>
       </header>
 
       <p>
-        Entusiasta das melhores tecnologias de matematica avançada.
-        <br /><br />
-        Apaixonado por explodir coisas em laboratorio e por mudar a vida das pessoas atraves de calculos.
+        {teacher.bio}
       </p>
 
       <footer>
         <p>
           Preço/hora
-          <strong>R$ 80,00</strong>
+          <strong>R$ {teacher.cost} </strong>
         </p>
-        <button type="button">
+        <a 
+          target="_blank" 
+          onClick={createNewConnection} 
+          href={`https://wa.me/${teacher.whatsapp}`} 
+          >
           <img src={whatsappIcon} alt="whatsapp icone" ></img>
           Entrar em contato
-        </button>
+        </a>
       </footer>
     </article>
   )
